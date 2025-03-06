@@ -32,6 +32,16 @@ public class PersonController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
+        if (personRepository.existsById(id)) {
+            personRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         Person savedPerson = personRepository.save(person);
