@@ -5,9 +5,7 @@
 
 ###  Configuração Básica
 - [x] Setup inicial do projeto Spring Boot
-- [ ] Configurar banco H2 em memória
-- [ ] Entender estrutura de pastas
-- [ ] Criar primeiro endpoint GET simples
+- [x] Criar primeiro endpoint GET simples
 
 ###  REST APIs + Database
 - [ ] Implementar CRUD completo
