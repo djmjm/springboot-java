@@ -4,7 +4,7 @@
 ---
 
 ###  Configuração Básica
-- [ ] Setup inicial do projeto Spring Boot
+- [x] Setup inicial do projeto Spring Boot
 - [ ] Configurar banco H2 em memória
 - [ ] Entender estrutura de pastas
 - [ ] Criar primeiro endpoint GET simples
