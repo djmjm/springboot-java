@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Person;
 import com.example.repository.PersonRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +43,30 @@ public class PersonController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Person> updatePersonById(
+            @PathVariable long id,
+            @RequestBody Person person){
+
+        return personRepository.findById(id)
+                .map(existingPerson -> {
+
+                    existingPerson.setName(person.getName());
+                    existingPerson.setAge(person.getAge());
+
+                    Person updatedPerson = personRepository.save(existingPerson);
+                    return ResponseEntity.ok(updatedPerson);
+                })
+                .orElse(ResponseEntity.notFound().build());
+
+
+    }
+
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         Person savedPerson = personRepository.save(person);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
+
+
 }
