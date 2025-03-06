@@ -8,7 +8,7 @@
 - [x] Criar primeiro endpoint GET simples
 
 ###  REST APIs + Database
-- [ ] Implementar CRUD completo
+- [x] Implementar CRUD completo
 - [ ] Validação de entradas
 - [ ] Conexão com MySQL
 - [ ] Paginação e ordenação
