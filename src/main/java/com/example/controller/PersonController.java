@@ -8,6 +8,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +45,28 @@ public class PersonController {
         return ResponseEntity.status(bodyMessage.getStatusCode()).body(
                 bodyMessage.getResponse()
         );
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/user")
+    public ResponseEntity <Map <String, Object>> getPersonByName(@RequestParam String name) {
+        List<Person> person = personRepository.findByNameContaining(name);
+        BodyMessage response = new BodyMessage(person, HttpStatus.OK,
+                "Carregado com sucesso!"
+        );
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND,
+                "Não encontrado!"
+        );
+
+        if(person.isEmpty()){
+            return ResponseEntity.status(responseNull.getStatusCode()).
+                    body(responseNull.getResponse()
+                    );
+        }else{
+            return ResponseEntity.status(response.getStatusCode()).
+                    body(response.getResponse()
+                    );
+        }
     }
 
     @GetMapping("/{id}")
