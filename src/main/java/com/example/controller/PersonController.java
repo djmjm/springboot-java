@@ -70,20 +70,26 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Person> updatePersonById(
+    public ResponseEntity <Map <String, Object>> updatePersonById(
             @PathVariable long id,
             @RequestBody Person person){
 
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
         return personRepository.findById(id)
                 .map(existingPerson -> {
 
                     existingPerson.setName(person.getName());
                     existingPerson.setAge(person.getAge());
-
                     Person updatedPerson = personRepository.save(existingPerson);
-                    return ResponseEntity.ok(updatedPerson);
+                    BodyMessage response = new BodyMessage(updatedPerson, HttpStatus.OK);
+
+                    return ResponseEntity.status(response.getStatusCode()).
+                            body(response.getResponse());
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(
+                        ResponseEntity.status(responseNull.getStatusCode()).
+                       body(responseNull.getResponse())
+                );
 
 
     }
