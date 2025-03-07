@@ -18,23 +18,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable=false)
     private String name;
 
-    @Min(value = 1)
-    @Column(nullable = false)
+    @Min(value=1)
+    @Column(nullable=false)
     private int age;
 
     @CPF
-    @Column(nullable = false)
+    @Column(nullable=false, unique=true)
     private String cpf;
 
     @Email
-    @Column(nullable = false)
+    @Column(nullable=false, unique=true)
     private String email;
 
     public UUID getId(){

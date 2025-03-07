@@ -6,6 +6,7 @@ import com.example.model.Person;
 import com.example.repository.PersonRepository;
 import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,23 +109,28 @@ public class PersonController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public ResponseEntity <Map<String, Object>> createPerson(@RequestBody Person person, HttpServletRequest request) {
+    public ResponseEntity <Map<String, Object>> createPerson(@Valid @RequestBody Person person, HttpServletRequest request) {
 
-        String clientIp = request.getRemoteAddr();
-        Long lastRequestTime = requestCache.getIfPresent(clientIp);
+        try {
+            String clientIp = request.getRemoteAddr();
+            Long lastRequestTime = requestCache.getIfPresent(clientIp);
 
-        if (lastRequestTime != null) {
-            long timeSinceLastRequest = System.currentTimeMillis() - lastRequestTime;
-            if (timeSinceLastRequest < 60 * 1000) {
-                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                        .body(Map.of("message", "Aguarde 60 segundos."));
+            if (lastRequestTime != null) {
+                long timeSinceLastRequest = System.currentTimeMillis() - lastRequestTime;
+                if (timeSinceLastRequest < 60 * 1000) {
+                    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                            .body(Map.of("message", "Aguarde 60 segundos."));
+                }
             }
-        }
-        requestCache.put(clientIp, System.currentTimeMillis());
+            requestCache.put(clientIp, System.currentTimeMillis());
 
-        Person savedPerson = personRepository.save(person);
-        BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED);
-        return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
+            Person savedPerson = personRepository.save(person);
+            BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
+        }catch(Exception e){
+            BodyMessage response = new BodyMessage(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
+        }
     }
 
 
