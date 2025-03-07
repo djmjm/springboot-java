@@ -37,7 +37,8 @@ public class PersonController {
     @GetMapping
     public ResponseEntity <Map <String, Object>> getAllPersons(@Min(1) int pageindex) {
         Pageable pages = PageRequest.of(pageindex*1 - 1, pageindex*1 + 8);
-        BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(pages).get(), HttpStatus.OK);
+        BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(pages).get(), HttpStatus.OK,
+                "Carregado com sucesso!");
 
         return ResponseEntity.status(bodyMessage.getStatusCode()).body(
                 bodyMessage.getResponse()
@@ -47,8 +48,12 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity <Map <String, Object>> getPersonById(@PathVariable UUID id) {
         Object person = personRepository.findById(id);
-        BodyMessage response = new BodyMessage(person, HttpStatus.OK);
-        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
+        BodyMessage response = new BodyMessage(person, HttpStatus.OK,
+                "Carregado com sucesso!"
+                );
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND,
+                "Não encontrado!"
+                );
 
         if(person == Optional.empty()){
             return ResponseEntity.status(responseNull.getStatusCode()).
@@ -65,8 +70,12 @@ public class PersonController {
     public ResponseEntity <Map<String, Object>> deletePerson(@PathVariable UUID id) {
         Object person = personRepository.findById(id);
 
-        BodyMessage response = new BodyMessage(person, HttpStatus.OK);
-        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
+        BodyMessage response = new BodyMessage(person, HttpStatus.OK,
+                "Deletado com sucesso!"
+                );
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND,
+                "Não encontrado!"
+                );
 
         if (person != Optional.empty()) {
             personRepository.deleteById(id);
@@ -85,7 +94,9 @@ public class PersonController {
             @PathVariable UUID id,
             @RequestBody Person person){
 
-        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND,
+                "Não encontrado!"
+                );
         return personRepository.findById(id)
                 .map(existingPerson -> {
 
@@ -94,7 +105,9 @@ public class PersonController {
                     existingPerson.setCpf(person.getCpf());
                     existingPerson.setEmail(person.getEmail());
                     Person updatedPerson = personRepository.save(existingPerson);
-                    BodyMessage response = new BodyMessage(updatedPerson, HttpStatus.OK);
+                    BodyMessage response = new BodyMessage(updatedPerson, HttpStatus.OK,
+                            "Atualizado com sucesso!"
+                            );
 
                     return ResponseEntity.status(response.getStatusCode()).
                             body(response.getResponse());
@@ -125,10 +138,14 @@ public class PersonController {
             requestCache.put(clientIp, System.currentTimeMillis());
 
             Person savedPerson = personRepository.save(person);
-            BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED);
+            BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED,
+                    "Criado com sucesso!"
+                    );
             return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
         }catch(Exception e){
-            BodyMessage response = new BodyMessage(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            BodyMessage response = new BodyMessage("Erro de entrada!", HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Entrada Invalida"
+                    );
             return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
         }
     }
