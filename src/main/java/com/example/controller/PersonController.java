@@ -90,6 +90,8 @@ public class PersonController {
 
                     existingPerson.setName(person.getName());
                     existingPerson.setAge(person.getAge());
+                    existingPerson.setCpf(person.getCpf());
+                    existingPerson.setEmail(person.getEmail());
                     Person updatedPerson = personRepository.save(existingPerson);
                     BodyMessage response = new BodyMessage(updatedPerson, HttpStatus.OK);
 

@@ -1,11 +1,14 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
+
 import java.util.UUID;
 
 @Entity
@@ -26,6 +29,14 @@ public class Person {
     @Column(nullable = false)
     private int age;
 
+    @CPF
+    @Column(nullable = false)
+    private String cpf;
+
+    @Email
+    @Column(nullable = false)
+    private String email;
+
     public UUID getId(){
         return id;
     }
@@ -33,6 +44,8 @@ public class Person {
         this.id = original.id;
         this.name = original.name;
         this.age = original.age;
+        this.email = original.email;
+        this.cpf = original.cpf;
     }
 
     public String getName() {
@@ -49,5 +62,21 @@ public class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
