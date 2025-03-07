@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Entity
 @Table(name = "persons")
@@ -14,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotBlank
     @Column(nullable = false)
@@ -25,7 +26,7 @@ public class Person {
     @Column(nullable = false)
     private int age;
 
-    public long getId(){
+    public UUID getId(){
         return id;
     }
     public Person(Person original){

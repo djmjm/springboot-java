@@ -7,6 +7,7 @@ import com.example.repository.PersonRepository;
 import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity <Map <String, Object>> getPersonById(@PathVariable Long id) {
+    public ResponseEntity <Map <String, Object>> getPersonById(@PathVariable UUID id) {
         Object person = personRepository.findById(id);
         BodyMessage response = new BodyMessage(person, HttpStatus.OK);
         BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
@@ -60,7 +61,7 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity <Map<String, Object>> deletePerson(@PathVariable Long id) {
+    public ResponseEntity <Map<String, Object>> deletePerson(@PathVariable UUID id) {
         Object person = personRepository.findById(id);
 
         BodyMessage response = new BodyMessage(person, HttpStatus.OK);
@@ -80,7 +81,7 @@ public class PersonController {
 
     @PutMapping("/{id}")
     public ResponseEntity <Map <String, Object>> updatePersonById(
-            @PathVariable long id,
+            @PathVariable UUID id,
             @RequestBody Person person){
 
         BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);

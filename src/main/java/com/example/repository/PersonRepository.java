@@ -1,7 +1,8 @@
 package com.example.repository;
 
 import com.example.model.Person;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PersonRepository extends JpaRepository<Person, Long> {
+public interface PersonRepository extends JpaRepository<Person, UUID> {
 }
