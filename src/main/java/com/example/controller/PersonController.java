@@ -135,9 +135,9 @@ public class PersonController {
                             .body(Map.of("message", "Aguarde 60 segundos."));
                 }
             }
-            requestCache.put(clientIp, System.currentTimeMillis());
 
             Person savedPerson = personRepository.save(person);
+            requestCache.put(clientIp, System.currentTimeMillis());
             BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED,
                     "Criado com sucesso!"
                     );
