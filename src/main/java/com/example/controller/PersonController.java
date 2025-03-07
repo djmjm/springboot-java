@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/persons")
@@ -33,10 +34,20 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
-        return personRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity <Map <String, Object>> getPersonById(@PathVariable Long id) {
+        Object person = personRepository.findById(id);
+        BodyMessage response = new BodyMessage(person, HttpStatus.OK);
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
+
+        if(person == Optional.empty()){
+            return ResponseEntity.status(responseNull.getStatusCode()).
+                    body(responseNull.getResponse()
+                    );
+        }else{
+            return ResponseEntity.status(response.getStatusCode()).
+                    body(response.getResponse()
+                    );
+        }
     }
 
     @DeleteMapping("/{id}")
