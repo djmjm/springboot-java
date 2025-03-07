@@ -95,9 +95,10 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+    public ResponseEntity <Map<String, Object>> createPerson(@RequestBody Person person) {
         Person savedPerson = personRepository.save(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
+        BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED);
+        return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
     }
 
 
