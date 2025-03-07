@@ -9,8 +9,8 @@
 
 ###  REST APIs + Database
 - [x] Implementar CRUD completo
-- [ ] Validação de entradas
-- [ ] Conexão com MySQL
+- [x] Validação de entradas
+- [x] Conexão com MySQL
 - [ ] Paginação e ordenação
 
 ###  Tópicos Avançados
