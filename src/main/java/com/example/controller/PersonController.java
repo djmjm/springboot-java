@@ -3,7 +3,10 @@ package com.example.controller;
 import com.example.controller.response.BodyMessage;
 import com.example.model.Person;
 import com.example.repository.PersonRepository;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +27,9 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity <Map <String, Object>> getAllPersons() {
-
-        BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity <Map <String, Object>> getAllPersons(@Min(1) int pageindex) {
+        Pageable pages = PageRequest.of(pageindex*1 - 1, pageindex*1 + 9);
+        BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(pages).get(), HttpStatus.OK);
 
         return ResponseEntity.status(bodyMessage.getStatusCode()).body(
                 bodyMessage.getResponse()
