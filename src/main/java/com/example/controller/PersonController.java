@@ -51,12 +51,21 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
-        if (personRepository.existsById(id)) {
+    public ResponseEntity <Map<String, Object>> deletePerson(@PathVariable Long id) {
+        Object person = personRepository.findById(id);
+
+        BodyMessage response = new BodyMessage(person, HttpStatus.OK);
+        BodyMessage responseNull = new BodyMessage("{}", HttpStatus.NOT_FOUND);
+
+        if (person != Optional.empty()) {
             personRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(response.getStatusCode()).
+                    body(response.getResponse()
+                    );
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(responseNull.getStatusCode()).
+                    body(responseNull.getResponse()
+                    );
         }
     }
 
