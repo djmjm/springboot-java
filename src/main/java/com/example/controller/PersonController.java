@@ -1,8 +1,11 @@
 package com.example.controller;
 
+import com.example.controller.cache.CacheConfig;
 import com.example.controller.response.BodyMessage;
 import com.example.model.Person;
 import com.example.repository.PersonRepository;
+import com.github.benmanes.caffeine.cache.Cache;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,15 +23,18 @@ import java.util.Optional;
 public class PersonController {
 
     private final PersonRepository personRepository;
+    private final Cache<String, Long> requestCache;
 
     @Autowired
-    public PersonController(PersonRepository personRepository) {
+    public PersonController(PersonRepository personRepository,  CacheConfig requestCache) {
         this.personRepository = personRepository;
+        this.requestCache = requestCache.getCache();
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity <Map <String, Object>> getAllPersons(@Min(1) int pageindex) {
-        Pageable pages = PageRequest.of(pageindex*1 - 1, pageindex*1 + 9);
+        Pageable pages = PageRequest.of(pageindex*1 - 1, pageindex*1 + 8);
         BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(pages).get(), HttpStatus.OK);
 
         return ResponseEntity.status(bodyMessage.getStatusCode()).body(
@@ -97,8 +103,22 @@ public class PersonController {
 
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public ResponseEntity <Map<String, Object>> createPerson(@RequestBody Person person) {
+    public ResponseEntity <Map<String, Object>> createPerson(@RequestBody Person person, HttpServletRequest request) {
+
+        String clientIp = request.getRemoteAddr();
+        Long lastRequestTime = requestCache.getIfPresent(clientIp);
+
+        if (lastRequestTime != null) {
+            long timeSinceLastRequest = System.currentTimeMillis() - lastRequestTime;
+            if (timeSinceLastRequest < 60 * 1000) {
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                        .body(Map.of("message", "Aguarde 60 segundos."));
+            }
+        }
+        requestCache.put(clientIp, System.currentTimeMillis());
+
         Person savedPerson = personRepository.save(person);
         BodyMessage response = new BodyMessage(savedPerson, HttpStatus.CREATED);
         return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
