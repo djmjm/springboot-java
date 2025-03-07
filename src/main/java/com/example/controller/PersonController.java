@@ -1,14 +1,15 @@
 package com.example.controller;
 
+import com.example.controller.response.BodyMessage;
 import com.example.model.Person;
 import com.example.repository.PersonRepository;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/persons")
@@ -22,8 +23,13 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> getAllPersons() {
-        return ResponseEntity.ok(personRepository.findAll());
+    public ResponseEntity <Map <String, Object>> getAllPersons() {
+
+        BodyMessage bodyMessage = new BodyMessage(personRepository.findAll(), HttpStatus.OK);
+
+        return ResponseEntity.status(bodyMessage.getStatusCode()).body(
+                bodyMessage.getResponse()
+        );
     }
 
     @GetMapping("/{id}")
