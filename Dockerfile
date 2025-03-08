@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-1/ AS build
+FROM maven:3-eclipse-temurin-17/ AS build
 COPY . .
 RUN mvn clean package dskipTests
 
