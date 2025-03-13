@@ -20,4 +20,4 @@
 - [ ] Testes unitários com JUnit/Mockito
 
 # Frontend consumindo API
-![Frontend para lista de pessoas](https://imgur.com/N2j4izA.png)
+![FrontEnd](https://i.imgur.com/vCXSNtv.png)
