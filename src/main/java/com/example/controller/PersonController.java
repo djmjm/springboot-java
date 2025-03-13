@@ -146,7 +146,7 @@ public class PersonController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
-    public ResponseEntity <Map<String, Object>> createPerson(@Valid @RequestBody Person person, HttpServletRequest request) {
+    public ResponseEntity <Map<String, Object>> createPerson(@RequestBody Person person, HttpServletRequest request) {
 
         try {
             String clientIp = request.getRemoteAddr();
