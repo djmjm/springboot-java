@@ -18,3 +18,6 @@
 - [ ] Documentação com Swagger/OpenAPI
 - [ ] Autenticação básica com Spring Security
 - [ ] Testes unitários com JUnit/Mockito
+
+# Frontend consumindo API
+![Frontend para lista de pessoas](https://imgur.com/N2j4izA.png)
