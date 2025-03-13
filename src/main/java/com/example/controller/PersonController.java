@@ -167,8 +167,8 @@ public class PersonController {
                     );
             return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
         }catch(Exception e){
-            BodyMessage response = new BodyMessage("Erro de entrada!", HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Entrada Invalida"
+            BodyMessage response = new BodyMessage("Erro de entrada!", HttpStatus.BAD_REQUEST,
+                    "Entrada Invalida - " + e.getMessage()
                     );
             return ResponseEntity.status(response.getStatusCode()).body(response.getResponse());
         }
