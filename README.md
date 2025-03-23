@@ -11,7 +11,7 @@
 - [x] Implementar CRUD completo
 - [x] Validação de entradas
 - [x] Conexão com MySQL
-- [ ] Paginação e ordenação
+- [x] Paginação e ordenação
 
 ###  Tópicos Avançados
 - [ ] Tratamento global de exceções
